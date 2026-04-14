@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<file:config name="File_Config" doc:name="File Config" doc:id="8c8d53e9-1d5f-403b-9155-6fb5dde53512" />
+	<flow name="poc_flatfileFlow" doc:id="fda26d36-cf25-44ab-84f9-ea6c5c068178" >
+		<file:listener doc:name="On New or Updated File" doc:id="10e47f82-847e-4904-b67d-12eed56a9063" config-ref="File_Config" directory="C:\usr\mule\interface\order-carve-out\dev\deliveryorder\in" outputMimeType='application/flatfile; missingvalues=spaces; schemapath="schemas/LOTS_source_schema.ffd"'>
+			<scheduling-strategy >
+				<fixed-frequency />
+			</scheduling-strategy>
+		</file:listener>
+		<ee:transform doc:name="Transform Message" doc:id="19d73db3-2300-419b-aa6f-db214f1957d6" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="13756fa2-36e1-40cf-9571-1090dfb62b65" message="#[payload]"/>
+	</flow>
+</mule>

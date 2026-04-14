@@ -1,0 +1,165 @@
+form: FIXEDWIDTH
+structures:
+- id: 'LOTS_SHIPMENT'
+  name: LOTS Shipment File
+  data:
+  - { idRef: 'GS', usage: M, count: 1 }
+  - groupId: 'H01_Loop'
+    usage: M
+    count: '>1'
+    items:
+    - { idRef: 'H01', usage: M, count: 1 }
+    - groupId: 'H02_Loop'
+      usage: M
+      count: '>1'
+      items:
+      - { idRef: 'H02', usage: M, count: 1 }
+      - groupId: 'D01_Loop'
+        usage: M
+        count: '>1'
+        items:
+        - { idRef: 'D01', usage: M, count: 1 }
+        - groupId: 'D02_Loop'
+          usage: O
+          count: '>1'
+          items:
+          - { idRef: 'D02', usage: O, count: 1 }
+          - { idRef: 'D03', usage: O, count: '>1' }
+  - { idRef: 'GE', usage: M, count: 1 }
+
+segments:
+
+# ─────────────────────────────────────────────
+# GS  –  File Header (Transport Shipment File)
+# ─────────────────────────────────────────────
+- id: 'GS'
+  name: GS File Header
+  discriminator: 'GS '
+  discriminatorPosition: 1
+  values:
+  - { id: 'GS',     name: 'GS start prefix',       type: String,  length: 3  }
+  - { id: 'GS_02',  name: 'GS sender',              type: String,  length: 15 }
+  - { id: 'GS_03',  name: 'GS receiver TUN',        type: String,  length: 15 }
+  - { id: 'GS_04',  name: 'GS date',                type: String,  length: 8  }   # YYYYMMDD
+  - { id: 'GS_05',  name: 'GS time',                type: String,  length: 4  }   # HHMM
+  - { id: 'GS_06',  name: 'GS control number',      type: String,  length: 9  }
+  - { id: 'GS_07',  name: 'GS transaction key',     type: String,  length: 44 }   # SHPMNT-LOT-S4H-GS
+  - { id: 'GS_08',  name: 'GS version',             type: String,  length: 5  }   # 1.0
+  - { id: 'GS_09',  name: 'GS test/prod flag',      type: String,  length: 1  }
+
+# ─────────────────────────────────────────────
+# H01  –  Transport Shipment Level Header
+# ─────────────────────────────────────────────
+- id: 'H01'
+  name: H01 Transport Shipment Header
+  discriminator: 'H01'
+  discriminatorPosition: 1
+  values:
+  - { id: 'H01',    name: 'Header Record Prefix',               type: String,  length: 3  }
+  - { id: 'TRSHX',  name: 'Transport shipment',                 type: String,  length: 9  }
+  - { id: 'MOTCX',  name: 'Mode of transport',                  type: String,  length: 3  }
+  - { id: 'TRACI',  name: 'Transport agent (carrier code)',      type: String,  length: 3  }
+  - { id: 'TRACI4', name: 'Transport agent description',        type: String,  length: 32 }
+  - { id: 'DECSX',  name: 'End date of close shipment',         type: String,  length: 8  }   # YYYYMMDD
+  - { id: 'TECSX',  name: 'End time of close shipment',         type: String,  length: 4  }   # HHMM
+  - { id: 'DATTX',  name: 'Departure date transport shipment',  type: String,  length: 8  }   # YYYYMMDD
+  - { id: 'TMDTX',  name: 'Departure time transport shipment',  type: String,  length: 4  }   # HHMM
+  - { id: 'UPID',   name: 'Field update/access identifier',     type: String,  length: 7  }
+
+# ─────────────────────────────────────────────
+# H02  –  Delivery Order Level Header
+# ─────────────────────────────────────────────
+- id: 'H02'
+  name: H02 Delivery Order Header
+  discriminator: 'H02'
+  discriminatorPosition: 1
+  values:
+  - { id: 'H02',    name: 'Header Record Prefix',            type: String,  length: 3  }
+  - { id: 'TRSHX',  name: 'Transport shipment',              type: String,  length: 9  }
+  - { id: 'DLORX',  name: 'Delivery order number',           type: String,  length: 10 }
+  - { id: 'UPID',   name: 'Field update/access identifier',  type: String,  length: 7  }
+
+# ─────────────────────────────────────────────
+# D01  –  Delivery Order Line Level Detail
+# ─────────────────────────────────────────────
+- id: 'D01'
+  name: D01 Delivery Order Line Detail
+  discriminator: 'D01'
+  discriminatorPosition: 1
+  values:
+  - { id: 'D01',    name: 'Detail Record Prefix',              type: String,  length: 3  }
+  - { id: 'TRSHX',  name: 'Transport shipment',                type: String,  length: 9  }
+  - { id: 'DLORX',  name: 'Delivery order number',             type: String,  length: 10 }
+  - { id: 'SQLDX',  name: 'Delivery order item number',        type: String,  length: 9  }
+  - { id: 'SQLSX',  name: 'Delivery order sub item number',    type: String,  length: 9  }
+  - { id: 'TRACI',  name: 'Transport agent (carrier code)',    type: String,  length: 3  }
+  - { id: 'EXPNX',  name: 'Expedition number',                 type: String,  length: 6  }
+  - { id: 'EXPEX',  name: 'Extended expedition number',        type: String,  length: 3  }
+  - { id: 'SEQNH',  name: 'Expedition line number',            type: String,  length: 3  }
+  - { id: 'PRODX',  name: 'Product catalog number',            type: String,  length: 18 }
+  - { id: 'PRVTX',  name: 'Product variant code',              type: String,  length: 18 }
+  - { id: 'LOTNX',  name: 'Lot number',                        type: String,  length: 15 }
+  - { id: 'PQTYX',  name: 'Packaging quantity',                type: String,  length: 7  }
+  - { id: 'CPUDX',  name: 'Product packaging unit code',       type: String,  length: 2  }
+  - { id: 'SPLIX',  name: 'Split indicator',                   type: String,  length: 1  }
+  - { id: 'DLORN',  name: 'New delivery order number',         type: String,  length: 10 }
+  - { id: 'SQLDN',  name: 'New delivery order item number',    type: String,  length: 9  }
+  - { id: 'SQLSN',  name: 'New delivery order sub item number', type: String, length: 9  }
+  - { id: 'CTIDX',  name: 'Carrier tracking ID',               type: String,  length: 15 }
+  - { id: 'UPID',   name: 'Field update/access identifier',    type: String,  length: 7  }
+
+# ─────────────────────────────────────────────
+# D02  –  Handling Unit Header Level
+# ─────────────────────────────────────────────
+- id: 'D02'
+  name: D02 Handling Unit Header
+  discriminator: 'D02'
+  discriminatorPosition: 1
+  values:
+  - { id: 'D02',    name: 'Detail Record Prefix',            type: String,   length: 3  }
+  - { id: 'TRSHX',  name: 'Transport shipment',              type: String,   length: 9  }
+  - { id: 'DLORX',  name: 'Delivery order number',           type: String,   length: 10 }
+  - { id: 'SQLDX',  name: 'Delivery order item number',      type: String,   length: 9  }
+  - { id: 'SQLSX',  name: 'Delivery order sub item number',  type: String,   length: 9  }
+  - { id: 'HUIDX',  name: 'Handling unit identifier',        type: String,   length: 13 }
+  - { id: 'HUTPX',  name: 'Handling unit type',              type: String,   length: 3  }
+  - { id: 'MTOTM',  name: 'Make 2 order type',               type: String,   length: 1  }
+  - { id: 'NBRBX',  name: 'Number of boxes',                 type: String,   length: 9  }
+  - { id: 'HUWTX',  name: 'Handling unit weight',            type: Decimal,  length: 9  }   # e.g. 5.4
+  - { id: 'HUWUX',  name: 'Handling unit weight UOM',        type: String,   length: 3  }   # KGM
+  - { id: 'HUVLX',  name: 'Handling unit volume',            type: Decimal,  length: 9  }   # e.g. 4.5
+  - { id: 'HUVUX',  name: 'Handling unit volume UOM',        type: String,   length: 3  }   # MTQ
+  - { id: 'UPID',   name: 'Field update/access identifier',  type: String,   length: 7  }
+
+# ─────────────────────────────────────────────
+# D03  –  Handling Unit Item Level
+# ─────────────────────────────────────────────
+- id: 'D03'
+  name: D03 Handling Unit Item Detail
+  discriminator: 'D03'
+  discriminatorPosition: 1
+  values:
+  - { id: 'D03',    name: 'Detail Record Prefix',            type: String,  length: 3  }
+  - { id: 'TRSHX',  name: 'Transport shipment',              type: String,  length: 9  }
+  - { id: 'DLORX',  name: 'Delivery order number',           type: String,  length: 10 }
+  - { id: 'SQLDX',  name: 'Delivery order item number',      type: String,  length: 9  }
+  - { id: 'SQLSX',  name: 'Delivery order sub item number',  type: String,  length: 9  }
+  - { id: 'HUIDX',  name: 'Handling unit identifier',        type: String,  length: 13 }
+  - { id: 'PRODX',  name: 'Product catalog number',          type: String,  length: 18 }
+  - { id: 'PRVTX',  name: 'Product variant code',            type: String,  length: 18 }
+  - { id: 'LOTNX',  name: 'Lot number',                      type: String,  length: 15 }
+  - { id: 'QTYPX',  name: 'Picked quantity',                 type: String,  length: 9  }
+  - { id: 'CPUDX',  name: 'Product packaging unit code',     type: String,  length: 2  }
+  - { id: 'UPID',   name: 'Field update/access identifier',  type: String,  length: 7  }
+
+# ─────────────────────────────────────────────
+# GE  –  File Trailer
+# ─────────────────────────────────────────────
+- id: 'GE'
+  name: GE File Trailer
+  discriminator: 'GE '
+  discriminatorPosition: 1
+  values:
+  - { id: 'GE',     name: 'GE start prefix',    type: String,  length: 3 }
+  - { id: 'GE_02',  name: 'GE record count',    type: String,  length: 6 }
+  - { id: 'GE_03',  name: 'GE control number',  type: String,  length: 9 }
